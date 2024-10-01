@@ -10,6 +10,7 @@ import SwiftUI
 struct HealthCounter: View {
     @Binding var health: Int
     let color: Color
+    let startingHealth: Int
     
     var body: some View {
         VStack(spacing: 20) {
@@ -27,7 +28,7 @@ struct HealthCounter: View {
                     .foregroundColor(color)
             }
             .onTapGesture(count: 2) {
-                health = 100
+                health = startingHealth
             }
             
             HStack(spacing: 15) {
@@ -72,9 +73,16 @@ struct CircularButton: ButtonStyle {
     }
 }
 
-struct ContentView: View {
-    @State private var health1 = 100
-    @State private var health2 = 100
+struct CounterView: View {
+    @State private var health1: Int
+    @State private var health2: Int
+    let startingHealth: Int
+    
+    init(startingHealth: Int) {
+        self.startingHealth = startingHealth
+        _health1 = State(initialValue: startingHealth)
+        _health2 = State(initialValue: startingHealth)
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -83,13 +91,13 @@ struct ContentView: View {
             Group {
                 if isLandscape {
                     HStack(spacing: 80) {
-                        HealthCounter(health: $health1, color: .green)
-                        HealthCounter(health: $health2, color: .green)
+                        HealthCounter(health: $health1, color: .green, startingHealth: startingHealth)
+                        HealthCounter(health: $health2, color: .green, startingHealth: startingHealth)
                     }
                 } else {
                     VStack(spacing: 60) {
-                        HealthCounter(health: $health1, color: .green)
-                        HealthCounter(health: $health2, color: .green)
+                        HealthCounter(health: $health1, color: .green, startingHealth: startingHealth)
+                        HealthCounter(health: $health2, color: .green, startingHealth: startingHealth)
                     }
                 }
             }
@@ -97,6 +105,44 @@ struct ContentView: View {
             .padding()
             .background(Color.black.opacity(0.05))
             .edgesIgnoringSafeArea(.all)
+        }
+    }
+}
+
+struct ContentView: View {
+    @State private var startingHealth = 100
+    @State private var navigateToCounter = false
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 30) {
+                Text("Select Starting Health")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                ForEach([50, 100, 200], id: \.self) { health in
+                    Button(action: {
+                        startingHealth = health
+                        navigateToCounter = true
+                    }) {
+                        Text("\(health)")
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .frame(width: 200, height: 60)
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                }
+            }
+            .navigationBarTitle("Health Counter", displayMode: .inline)
+            .background(
+                NavigationLink(
+                    destination: CounterView(startingHealth: startingHealth),
+                    isActive: $navigateToCounter,
+                    label: { EmptyView() }
+                )
+            )
         }
     }
 }
