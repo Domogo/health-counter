@@ -1,26 +1,30 @@
 import SwiftUI
 
-struct StartingHealthView: View {
-    @Binding var startingHealth: Int
-    let playerMode: PlayerMode
-    var onHealthSelected: () -> Void
+enum PlayerMode: String, CaseIterable {
+    case single = "Single Player"
+    case two = "Two Players"
+}
+
+struct PlayerModeView: View {
+    @Binding var selectedMode: PlayerMode
+    var onModeSelected: () -> Void
     
     var body: some View {
         VStack(spacing: 30) {
-            Text("Select Starting Health")
+            Text("Select Player Mode")
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            ForEach([50, 100, 200], id: \.self) { health in
+            ForEach(PlayerMode.allCases, id: \.self) { mode in
                 Button(action: {
-                    startingHealth = health
-                    onHealthSelected()
+                    selectedMode = mode
+                    onModeSelected()
                 }) {
-                    Text("\(health)")
+                    Text(mode.rawValue)
                         .font(.title)
                         .fontWeight(.semibold)
                         .frame(width: 200, height: 60)
-                        .background(Color.green)
+                        .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }

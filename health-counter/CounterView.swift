@@ -4,9 +4,11 @@ struct CounterView: View {
     @State private var health1: Int
     @State private var health2: Int
     let startingHealth: Int
+    let playerMode: PlayerMode
     
-    init(startingHealth: Int) {
+    init(startingHealth: Int, playerMode: PlayerMode) {
         self.startingHealth = startingHealth
+        self.playerMode = playerMode
         _health1 = State(initialValue: startingHealth)
         _health2 = State(initialValue: startingHealth)
     }
@@ -16,15 +18,19 @@ struct CounterView: View {
             let isLandscape = geometry.size.width > geometry.size.height
             
             Group {
-                if isLandscape {
-                    HStack(spacing: 80) {
-                        HealthCounter(health: $health1, color: .green, startingHealth: startingHealth)
-                        HealthCounter(health: $health2, color: .green, startingHealth: startingHealth)
-                    }
+                if playerMode == .single {
+                    HealthCounter(health: $health1, color: .green, startingHealth: startingHealth)
                 } else {
-                    VStack(spacing: 60) {
-                        HealthCounter(health: $health1, color: .green, startingHealth: startingHealth)
-                        HealthCounter(health: $health2, color: .green, startingHealth: startingHealth)
+                    if isLandscape {
+                        HStack(spacing: 80) {
+                            HealthCounter(health: $health1, color: .green, startingHealth: startingHealth)
+                            HealthCounter(health: $health2, color: .green, startingHealth: startingHealth)
+                        }
+                    } else {
+                        VStack(spacing: 60) {
+                            HealthCounter(health: $health1, color: .green, startingHealth: startingHealth)
+                            HealthCounter(health: $health2, color: .green, startingHealth: startingHealth)
+                        }
                     }
                 }
             }
