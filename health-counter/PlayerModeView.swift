@@ -18,6 +18,7 @@ struct PlayerModeView: View {
             ForEach(PlayerMode.allCases, id: \.self) { mode in
                 Button(action: {
                     selectedMode = mode
+                    print("Selected mode: \(mode)")
                     onModeSelected()
                 }) {
                     Text(mode.rawValue)

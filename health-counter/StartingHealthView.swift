@@ -3,7 +3,7 @@ import SwiftUI
 struct StartingHealthView: View {
     @Binding var startingHealth: Int
     let playerMode: PlayerMode
-    var onHealthSelected: () -> Void
+    var onHealthSelected: (Int, PlayerMode) -> Void
     
     var body: some View {
         VStack(spacing: 30) {
@@ -14,7 +14,7 @@ struct StartingHealthView: View {
             ForEach([50, 100, 200], id: \.self) { health in
                 Button(action: {
                     startingHealth = health
-                    onHealthSelected()
+                    onHealthSelected(health, playerMode)
                 }) {
                     Text("\(health)")
                         .font(.title)

@@ -11,13 +11,14 @@ struct CounterView: View {
         self.playerMode = playerMode
         _health1 = State(initialValue: startingHealth)
         _health2 = State(initialValue: startingHealth)
+        print("CounterView initialized with playerMode: \(playerMode)")
     }
     
     var body: some View {
         GeometryReader { geometry in
             let isLandscape = geometry.size.width > geometry.size.height
             
-            Group {
+            VStack {
                 if playerMode == .single {
                     HealthCounter(health: $health1, color: .green, startingHealth: startingHealth)
                 } else {
@@ -37,7 +38,10 @@ struct CounterView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
             .background(Color.black.opacity(0.05))
-            .edgesIgnoringSafeArea(.all)
+        }
+        .edgesIgnoringSafeArea(.all)
+        .onAppear {
+            print("CounterView appeared with playerMode: \(playerMode)")
         }
     }
 }

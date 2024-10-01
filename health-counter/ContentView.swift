@@ -20,7 +20,9 @@ struct ContentView: View {
             .navigationDestination(for: String.self) { destination in
                 switch destination {
                 case "healthSelection":
-                    StartingHealthView(startingHealth: $startingHealth, playerMode: playerMode) {
+                    StartingHealthView(startingHealth: $startingHealth, playerMode: playerMode) { health, mode in
+                        startingHealth = health
+                        playerMode = mode
                         navigationPath.append("counter")
                     }
                 case "counter":
